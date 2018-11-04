@@ -2,7 +2,6 @@ import React from "react";
 import { Root, Container, Content, StyleProvider } from "native-base";
 import AppHeader from "./AppHeader";
 import Discovery from "../hue/Discovery";
-
 import getTheme from "../../theme/components";
 import commonColor from "../../theme/variables/commonColor";
 
@@ -13,7 +12,7 @@ const AppContents: React.SFC = () => {
             <Root>
                 <Container>
                     <AppHeader />
-                    <Content padder>
+                    <Content contentContainerStyle={{flexGrow: 1}} padder>
                         <Discovery />
                     </Content>
                 </Container>

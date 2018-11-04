@@ -6,9 +6,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 25,
         textAlign: "center",
-    },
-    title: {
-        paddingTop: 40
     }
 });
 
@@ -21,7 +18,7 @@ const MessageWithSpinner: React.SFC<Props> = (props) => {
     const { text, spinnerColor = "blue"} = props;
     return (
         <>
-            <View style={styles.title}>
+            <View>
                 <Text style={styles.text}>{text}</Text>
             </View>
             <Spinner color={spinnerColor} />

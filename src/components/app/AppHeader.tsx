@@ -15,12 +15,6 @@ async function handleTrashPress() {
 }
 
 function handleMenuPress() {
-    // ActionSheet.show({
-    //     options: [{ text: "Delete Local Data", icon: "trash" }],
-    //     destructiveButtonIndex: 0
-    // }, index => {
-    //     toast(index != null ? index.toString() : "Nothing");
-    // });
     const sheet = Platform.select({
         ios: () => {
             ActionSheet.show({
