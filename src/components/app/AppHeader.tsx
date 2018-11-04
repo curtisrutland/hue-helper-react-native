@@ -5,7 +5,6 @@ import {
 } from "native-base";
 import { StyleSheet, ViewStyle } from "react-native";
 import { clearLocalStorage } from "../../api/api";
-import { Link } from "react-router-native";
 
 const styles = StyleSheet.create({
     body: {
@@ -16,13 +15,7 @@ const styles = StyleSheet.create({
 const AppHeader: React.SFC = () => {
     return (
         <Header>
-            <Left>
-                <Link to="/">
-                    <Button transparent>
-                        <Icon name="home" />
-                    </Button>
-                </Link>
-            </Left>
+            <Left />
             <Body style={styles.body as ViewStyle}>
                 <Title>Test</Title>
             </Body>

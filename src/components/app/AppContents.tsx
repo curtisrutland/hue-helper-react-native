@@ -6,7 +6,7 @@ const AppContents: React.SFC = ({ children }) => {
     return (
         <Container>
             <AppHeader />
-            <Content>
+            <Content padder>
                 {children}
             </Content>
         </Container>
