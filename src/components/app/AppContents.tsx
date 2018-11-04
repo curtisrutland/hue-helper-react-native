@@ -1,15 +1,18 @@
 import React from "react";
-import { Container, Content } from "native-base";
+import { Root, Container, Content } from "native-base";
 import AppHeader from "./AppHeader";
+import Discovery from "../hue/Discovery";
 
-const AppContents: React.SFC = ({ children }) => {
+const AppContents: React.SFC = () => {
     return (
-        <Container>
-            <AppHeader />
-            <Content padder>
-                {children}
-            </Content>
-        </Container>
+        <Root>
+            <Container>
+                <AppHeader />
+                <Content padder>
+                    <Discovery />
+                </Content>
+            </Container>
+        </Root>
     )
 }
 

@@ -38,3 +38,5 @@ function init(store: Store<ApplicationState, AnyAction>, sagaMiddleware: SagaMid
     });
   } 
 }
+
+export * from "./bridge";

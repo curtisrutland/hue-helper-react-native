@@ -9,9 +9,7 @@ const App: React.SFC = () => {
 
     return (
         <Provider store={store}>
-            <AppContents>
-
-            </AppContents>
+            <AppContents />
         </Provider>
     )
 }

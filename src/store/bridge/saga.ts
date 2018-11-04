@@ -1,6 +1,8 @@
 import { takeLatest, put } from "redux-saga/effects";
-import { BridgeActions } from "./";
+import { delay } from "redux-saga";
 import { getType } from "typesafe-actions";
+import { toast } from "../../helpers";
+import { BridgeActions } from "./";
 import hue from '../../api/hue';
 
 function* watchDiscover() {
@@ -22,7 +24,23 @@ function* discoverUser() {
         yield put(BridgeActions.createUserSuccess());
         console.log("loaded saved user");
     } else {
-        console.log("no stored user");
+        console.log("no stored user, creating");
+        yield createUser();
+    }
+}
+
+function* createUser() {
+    yield delay(2000);
+    while (true) {
+        let result: true | string = yield hue.createUser();
+        if (result === true) {
+            yield put(BridgeActions.createUserSuccess());
+            toast("Linked successfully!");
+            break;
+        } else {
+            toast(result);
+            yield delay(5000);
+        }
     }
 }
 

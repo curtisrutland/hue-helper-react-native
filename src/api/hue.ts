@@ -33,21 +33,20 @@ class HueApi {
         }
     }
 
-    public async createUser(): Promise<boolean> {
+    public async createUser(): Promise<true | string> {
         const req: AddUserRequest = { devicetype: appIdentifier };
         const res = await post<AddUserResponse[]>(this.apiRootUrl, req);
         if (!res || !res.length) {
             console.error("bad problem");
-            return false;
+            return "sanity check failed";
         }
         const response = res[0];
         if (response.error) {
             if (response.error.type === userErrors.linkButtonNotPressed) {
-                console.warn("Link button not pressed");
+                return "Link button not pressed";
             } else {
-                console.error(response);
+                return response.error.description;
             }
-            return false;
         } else if (response.success) {
             const { username } = response.success;
             await storeUsername(this.bridgeId, username);
@@ -57,7 +56,7 @@ class HueApi {
         } else {
             console.error("something very wrong");
             debugger;
-            return false;
+            return "sanity check failed";
         }
     }
 
