@@ -7,6 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/color": "^3.0.0",
+    "@types/lodash": "^4.14.117",
+    "color": "^3.1.0",
     "native-base": "^2.8.1",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.4",
