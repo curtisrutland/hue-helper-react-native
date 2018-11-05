@@ -1,49 +1,58 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
-    Header, Left, Title,
+    Header, Left, Title, Subtitle,
     Body, Right, Button, Icon, ActionSheet
 } from "native-base";
 import { Platform } from "react-native";
-import { clearLocalStorage } from "../../api/api";
-import { toast } from "../../helpers";
+import { Dispatch } from "redux";
+import { BridgeActions } from "../../store/bridge";
+import { ApplicationState } from "../../store";
 
 const DELETE_MESSAGE = "Delete Local Data";
 
-async function handleTrashPress() {
-    await clearLocalStorage();
-    toast("Data cleared!");
+function handleMenuPress(clearAllData: () => void) {
+    return function () {
+        const sheet = Platform.select({
+            ios: () => {
+                ActionSheet.show({
+                    options: ["Cancel", DELETE_MESSAGE],
+                    destructiveButtonIndex: 1,
+                    cancelButtonIndex: 0
+                }, index => {
+                    if (index === 1) {
+                        clearAllData();
+                    }
+                })
+            },
+            android: () => {
+                ActionSheet.show({
+                    options: [{ text: DELETE_MESSAGE, icon: "trash", iconColor: "red" }],
+                    destructiveButtonIndex: 0,
+                }, index => {
+                    if (index === 0) {
+                        clearAllData();
+                    }
+                })
+            }
+        });
+        if (sheet) sheet();
+    }
 }
 
-function handleMenuPress() {
-    const sheet = Platform.select({
-        ios: () => {
-            ActionSheet.show({
-                options: ["Cancel", DELETE_MESSAGE],
-                destructiveButtonIndex: 1,
-                cancelButtonIndex: 0
-            }, index => {
-                if (index === 1) {
-                    handleTrashPress();
-                }
-            })
-        },
-        android: () => {
-            ActionSheet.show({
-                options: [{ text: DELETE_MESSAGE, icon: "trash", iconColor: "red" }],
-                destructiveButtonIndex: 0,
-            }, index => {
-                if (index === 0) {
-                    handleTrashPress();
-                }
-            })
-        }
-    });
-    if (sheet) sheet();
+interface PropsFromDispatch {
+    clearAllData: () => void
 }
 
-const AppHeader: React.SFC = () => {
+interface PropsFromState {
+    subtitle: string | undefined;
+}
+
+type Props = PropsFromDispatch & PropsFromState;
+
+const AppHeader: React.SFC<Props> = ({ clearAllData, subtitle }) => {
     let button = (
-        <Button transparent onPress={handleMenuPress}>
+        <Button transparent onPress={handleMenuPress(clearAllData)}>
             <Icon name="menu" />
         </Button>
     );
@@ -55,15 +64,32 @@ const AppHeader: React.SFC = () => {
         ios: <Right>{button}</Right>,
         android: <Right />
     })
+    let sub = !!subtitle
+        ? <Subtitle>{subtitle}</Subtitle>
+        : null;
     return (
         <Header>
             {left}
             <Body>
                 <Title>Hue Helper</Title>
+                {sub}
             </Body>
             {right}
         </Header>
     );
 }
 
-export default AppHeader;
+function mapStateToProps({ navigation }: ApplicationState): PropsFromState {
+    if (navigation.showNav) {
+        return { subtitle: navigation.activeTab === "Groups" ? "Rooms" : "Lights" };
+    }
+    return { subtitle: undefined };
+}
+
+function mapDispatchToProps(dispatch: Dispatch): PropsFromDispatch {
+    return {
+        clearAllData: () => dispatch(BridgeActions.clearAllData())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppHeader);

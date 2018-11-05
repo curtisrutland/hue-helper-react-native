@@ -1,42 +1,55 @@
-import { createStore, Store, applyMiddleware, AnyAction } from "redux";
+import { createStore, Store, applyMiddleware, combineReducers } from "redux";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import {
   defaultState as bridgeDefaultState,
-  BridgeState, BridgeActionsType, BridgeActions
+  BridgeState, BridgeActionsType, BridgeActions,
+  default as bridge
 } from './bridge';
-import rootReducer from "./rootReducer";
+import {
+  defaultState as groupsDefaultState,
+  GroupsState, GroupsActionsType,
+  default as groups
+} from "./groups";
+import {
+  defaultState as navigationDefaultState,
+  NavigationState, NavigationActionsType,
+  default as navigation
+} from "./navigation";
 import rootSaga from "./rootSaga";
-
-declare var module: any;
+import { composeWithDevTools } from "redux-devtools-extension";
 
 export interface ApplicationState {
-  bridge: BridgeState
+  bridge: BridgeState,
+  groups: GroupsState,
+  navigation: NavigationState
 };
 
 const defaultState: ApplicationState = {
-  bridge: bridgeDefaultState
+  bridge: bridgeDefaultState,
+  groups: groupsDefaultState,
+  navigation: navigationDefaultState
 };
 
-export type ApplicationActionsType = BridgeActionsType;
+export type ApplicationActionsType = BridgeActionsType 
+  | GroupsActionsType
+  | NavigationActionsType;
+
+const rootReducer = combineReducers<ApplicationState>({
+  bridge,
+  groups,
+  navigation
+});
 
 export function configureStore(): Store<ApplicationState, ApplicationActionsType> {
   const state: ApplicationState = defaultState;
   const sagaMiddleware = createSagaMiddleware();
-  const store = createStore(rootReducer, state, applyMiddleware(sagaMiddleware));
+  const middleware = composeWithDevTools(applyMiddleware(sagaMiddleware));
+  const store = createStore(rootReducer, state, middleware);
   init(store, sagaMiddleware);
   return store as Store<ApplicationState, ApplicationActionsType>;
 }
 
-function init(store: Store<ApplicationState, AnyAction>, sagaMiddleware: SagaMiddleware<{}>) {
+function init(store: Store<ApplicationState, ApplicationActionsType>, sagaMiddleware: SagaMiddleware<{}>) {
   sagaMiddleware.run(rootSaga);
-  store.dispatch(BridgeActions.discover()); 
-  if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./rootReducer', () => {
-      const nextRootReducer = require('./rootReducer');
-      store.replaceReducer(nextRootReducer);
-    });
-  } 
+  store.dispatch(BridgeActions.discover());
 }
-
-export * from "./bridge";

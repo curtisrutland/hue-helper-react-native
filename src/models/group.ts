@@ -3,7 +3,7 @@ export interface GroupState {
     any_on: boolean;
 }
 
-export interface GroupAction {
+export interface GroupApiAction {
     on?: boolean;
     bri?: number;
     hue?: number;
@@ -23,7 +23,7 @@ export interface Group {
     state: GroupState;
     recycle: boolean;
     class: string;
-    action: GroupAction;
+    action: GroupApiAction;
 }
 
 export interface Groups {
@@ -32,10 +32,10 @@ export interface Groups {
 
 export interface UpdateGroupPayload {
     groupId: string;
-    action: GroupAction
+    action: GroupApiAction
 }
 
-const defaultGroupAction: GroupAction = {
+const defaultGroupAction: GroupApiAction = {
     on: false,
     bri: 1,
     hue: 0,
@@ -67,8 +67,8 @@ export const defaultGroups: Groups = {
     "1": { ...defaultGroup }
 }
 
-const bright: GroupAction = { bri: 254, hue: 8402, sat: 140 };
-const dim: GroupAction = { bri: 77, hue: 8402, sat: 140 };
-const night: GroupAction = { bri: 30, hue: 8402, sat: 140 };
+const bright: GroupApiAction = { bri: 254, hue: 8402, sat: 140 };
+const dim: GroupApiAction = { bri: 77, hue: 8402, sat: 140 };
+const night: GroupApiAction = { bri: 30, hue: 8402, sat: 140 };
 
 export const actionPresets = { bright, dim, night };

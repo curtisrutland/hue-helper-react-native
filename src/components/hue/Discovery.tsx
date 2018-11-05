@@ -13,7 +13,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const Discovery: React.SFC<BridgeState> = ({ discoveryCompleted, error }) => {
+const Discovery: React.SFC<BridgeState> = ({ discoveryCompleted, userCreated, error }) => {
+    if (userCreated) {
+        return null;
+    }
     let showUser = discoveryCompleted && !error;
     return (
         <View style={styles.container}>

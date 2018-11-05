@@ -1,4 +1,4 @@
-import { Group, Groups, GroupAction } from "../models/group";
+import { Group, Groups, GroupApiAction } from "../models/group";
 import { get, put, post, getStoredUsername, storeUsername } from "./api";
 import { Bridge } from '../models/bridge';
 import { AddUserRequest, AddUserResponse, errorTypes as userErrors } from "../models/user";
@@ -23,7 +23,7 @@ class HueApi {
         return await get<Group>(`${this.groupUrl}/${groupId}`);
     }
 
-    public async setGroupAction(groupId: string, action: GroupAction): Promise<boolean> {
+    public async setGroupAction(groupId: string, action: GroupApiAction): Promise<boolean> {
         try {
             await put(`${this.groupUrl}/${groupId}/action`, action);
             return true;
